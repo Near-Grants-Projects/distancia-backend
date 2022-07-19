@@ -1,0 +1,335 @@
+openapi: 3.0.0
+info:
+  title: "Distancia Backend Service"
+  description: "This service provides endpoints for all related interactions"
+  version: 1.0.0
+  contact:
+    name: "Distancia Team"
+    email: "dev@distancia.com"
+
+x-organization: distancia
+x-service-id: backend
+
+servers:
+  - description: Staging Ingress
+    url: https://api.distancia
+
+tags:
+  - name: onboarding
+    description: "User onboarding related endpoints"
+  - name: ads
+    description: "ads related endpoints"
+  - name: milestone
+    description: "milestone related endpoints"
+
+security:
+  - bearerToken: [ ]
+
+paths:
+  /onboarding/address:
+    post:
+      summary: "Endpoint to save user's address to database"
+      operationId: saveUserAddress
+      x-visibility: public
+      tags:
+        - "onboarding"
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserAddress"
+
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SaveAddressResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "default":
+          $ref: "#/components/responses/ServerError"
+
+  /ads/interests:
+    get:
+      summary: "get all interest category"
+      operationId: adsInterest
+      description: "Send list of interests"
+      x-visibility: public
+      tags:
+        - "ads"
+      responses:
+        '200':
+          $ref: "#/components/responses/InterestListResponse"
+        "400":
+          $ref: "#/components/responses/InvalidRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "default":
+          $ref: "#/components/responses/ServerError"
+
+  /ads/vids:
+    get:
+      summary: "query ads base on interest"
+      operationId: adsVids
+      x-visibility: public
+      tags:
+        - "ads"
+      parameters:
+        - in: "query"
+          name: "interest"
+          schema:
+            type: "string"
+            minLength: 4
+          required: true
+          description: "interest name"
+      responses:
+        '200':
+          $ref: "#/components/responses/AdsListResponse"
+        "400":
+          $ref: "#/components/responses/InvalidRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "default":
+          $ref: "#/components/responses/ServerError"
+
+  /milestone/covered:
+    post:
+      summary: "Endpoint to update user's milestone"
+      operationId: milestoneCovered
+      x-visibility: public
+      tags:
+        - "milestone"
+      
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MilestoneCovered"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessMessage"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "default":
+          $ref: "#/components/responses/ServerError"
+
+components:
+  schemas:
+    # REQUEST OBJECT DEFINITIONS
+    UserAddress:
+      type: object
+      required:
+        - address
+      properties:
+        address:
+          type: string
+          description: The address of the user
+    
+    MilestoneCovered:
+      type: object
+      required:
+        - distance
+      properties:
+        distance:
+          type: string
+          description: The distance moved by the user
+        type:
+          type: string
+          description: Type of activity
+
+
+    # RESPONSE OBJECT DEFINITIONS
+    InterestList:
+      type: "object"
+      description: "List of interests"
+      properties:
+        data:
+          type: "array"
+          items:
+             $ref: '#/components/schemas/InterestDto'
+    AdsList: 
+      type: "object"
+      description: "List of Ads"
+      properties:
+        data:
+          type: "array"
+          items:
+             $ref: '#/components/schemas/AdsDto'
+
+
+    SaveAddressResponse:
+      type: "object"
+      required:
+        - "id"
+        - "address"
+      properties:
+        id:
+          type: "string"
+          format: "uuid"
+          description: "The id of user"
+        address:
+          type: "string"
+          description: "The address of user"
+      
+
+    InterestDto:
+      type: "object"
+      required:
+        - "id"
+        - "name"
+      properties:
+        id:
+          type: "string"
+          format: "uuid"
+          description: "The id of interest"
+        name:
+          type: "string"
+    
+    AdsDto:
+      type: "object"
+      required:
+        - "id"
+      properties:
+        id:
+          type: "string"
+          format : "uuid"
+          description: "The id of ads"
+        owner_id:
+          type: "string"
+          format: "uuid"
+          description: "The owner id of the ads"
+        interest_id:
+          type: "string"
+          format: "uuid"
+          description: "The id of interest"
+        media_link:
+          type: "string"
+        media_type:
+          type: "string"
+
+    SuccessMessage:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Returns a true to state that action was successful
+          example: true
+        message:
+          type: string
+          description: Message for successful operation
+          example: Verification otp has been sent to your email
+
+    ErrorMessageDto:
+      $ref: "./common.yaml#/components/schemas/ErrorMessageDto"
+
+    StatusDto:
+      $ref: "./common.yaml#/components/schemas/StatusDto"
+
+
+    # ENUM DEFINITIONS
+  responses:
+    StatusResponse:
+      description: Request status
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/StatusDto"
+          example:
+            success: true
+            message: 'Action completed successfully'
+            data:
+              label: name of service
+              expiry: date
+
+    InterestListResponse:
+      description: List of interests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/InterestList'
+
+    AdsListResponse:
+      description: List of ads
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AdsList'
+
+    InvalidRequest:
+      description: Request could not be validated
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorMessageDto"
+          example:
+            code: 'BAD_REQUEST'
+            message: 'Request could not be validated.'
+
+    Unauthorized:
+      description: Client is not authorized to make request
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorMessageDto"
+          example:
+            code: 'UNAUTHORIZED'
+            message: 'Either client security header is missing or it is not valid.'
+
+    NotFound:
+      description: Entity was not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorMessageDto"
+          example:
+            code: 'NOT_FOUND'
+            message: 'Information could not be found'
+
+    ConflictError:
+      description: Entity already exist while user tries to create it.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorMessageDto"
+          example:
+            code: 'ACCESS_DENIED'
+            message: 'Entity already exist!'
+
+    AccessDenied:
+      description: Expected permission is not available.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorMessageDto"
+          example:
+            code: 'ACCESS_DENIED'
+            message: 'Expected permission or scope is not present.'
+
+    ServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorMessageDto"
+          example:
+            code: 'INTERNAL_ERROR'
+            message: 'An internal server error occurred.'
+
+  securitySchemes:
+    bearerToken:
+      type: "http"
+      scheme: "bearer"
+      bearerFormat: "JWT"
+      description: "Authentication for user-facing endpoints. Uses bearer token in API prefix."
+    authToken:
+      type: "apiKey"
+      name: "x-auth-token"
+      in: "header"
+      description: "Auth Token header for inter-service communication"

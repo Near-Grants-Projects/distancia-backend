@@ -1,8 +1,7 @@
 import express, { Application, Request } from "express";
 import cors from "cors";
 import helmet from "helmet";
-import compression from "compression";
-import morgan from "morgan";
+import compression from 'compression';
 import cookieParser from "cookie-parser";
 import C from "./constants";
 import { IAppOptions, IDatabaseConnector } from "./interfaces";
@@ -13,8 +12,10 @@ import mongoose, { Schema } from "mongoose";
 import { MongooseUuid } from "./database/types/mongoose-uuid.type";
 (Schema.Types as any).UUID = MongooseUuid;
 import RouteManager from "./routes";
-
-
+import response from './lib/response';
+import { LoggerHelper } from './helpers/logger';
+import { container } from 'tsyringe';
+const logger: LoggerHelper = container.resolve(LoggerHelper);
 
 export type IRequestWithIp = Request & RequestIpRequest;
 
@@ -44,14 +45,14 @@ export default class App {
 
   checkDependencies(): void {
     if (!MongoDbConnector.getClient()) {
-      throw new Error("Initialize DB!!!");
+      throw new Error('Initialize DB!!!');
     }
   }
 
   protected configure(): void {
     const {
       urlencodExtended = true,
-      requestSizeLimit = "20mb",
+      requestSizeLimit = '20mb',
       compression: compressionOption,
       cors: corsOption,
     } = this.options;
@@ -60,6 +61,7 @@ export default class App {
     this.engine.use(helmet.hidePoweredBy());
     this.engine.use(cookieParser());
     this.engine.use(requestIpMw());
+    this.engine.use(response);
     this.engine.use(cors(corsOption));
     this.engine.use(compression(compressionOption));
     this.engine.use(express.json({ limit: requestSizeLimit }));
@@ -89,7 +91,7 @@ export default class App {
 
   run(): void {
     this.connection = this.engine.listen(this.port, () => {
-      console.log(`App now running on port ${this.port}`);
+      logger.log(`App now running on port ${this.port}`);
     });
   }
 

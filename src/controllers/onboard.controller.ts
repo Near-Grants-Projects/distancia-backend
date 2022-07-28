@@ -10,6 +10,6 @@ export default class OnboardController {
       }
 
       doSomething = async (req, res) => {
-     
+        console.log("here")
       }
 }

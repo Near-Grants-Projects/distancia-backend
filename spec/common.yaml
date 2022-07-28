@@ -1,6 +1,6 @@
 openapi: 3.0.1
 info:
-  title: Common Models for Myasoebi
+  title: Common Models for Distancia
   description: >
     # About Common Models
 
@@ -15,7 +15,7 @@ servers:
 paths: {}
 x-organization: core
 x-service-id: common
-x-source-repository: Myasoebi/openapi
+x-source-repository: distancia/openapi
 x-source-path: services/common.yaml
 components:
   schemas:

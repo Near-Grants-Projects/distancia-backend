@@ -6,7 +6,23 @@ use near_contract_standards::fungible_token::FungibleToken;
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::collections::LazyOption;
 use near_sdk::json_types::U128;
-use near_sdk::{env, log, near_bindgen, AccountId, Balance, PanicOnDefault, PromiseOrValue};
+use near_sdk::{env, log, near_bindgen, AccountId, Balance, PanicOnDefault, BorshStorageKey PromiseOrValue};
+
+const token_metadata: FungibleTokenMetadata = FungibleTokenMetadata {
+    spec: FT_METADATA_SPEC.to_string(),
+    name: "Distancia Token".to_string(),
+    symbol: "DIST".to_string(),
+    icon: None,
+    reference: None,
+    reference_hash: None,
+    decimals: 24,
+};
+
+#[derive(BorshSerialize, BorshStorageKey)]
+enum StorageKey {
+    FungibleToken,
+    Metadata,
+}
 
 #[near_bindgen]
 #[derive(BorshDeserialize, BorshSerialize, PanicOnDefault)]
@@ -20,38 +36,18 @@ pub struct DistanciaToken {
 
 #[near_bindgen]
 impl DistanciaToken {
-    /// Initializes the contract with the given total supply owned by the given `owner_id` with
-    /// default metadata (for example purposes only).
-    #[init]
-    pub fn new_default_meta(owner_id: AccountId, total_supply: U128) -> Self {
-        Self::new(
-            owner_id,
-            total_supply,
-            FungibleTokenMetadata {
-                spec: FT_METADATA_SPEC.to_string(),
-                name: "Distancia Token".to_string(),
-                symbol: "DIST".to_string(),
-                icon: None,
-                reference: None,
-                reference_hash: None,
-                decimals: 24,
-            },
-        )
-    }
 
-    /// Initializes the contract with the given total supply owned by the given `owner_id` with
-    /// the given fungible token metadata.
+    /// Initializes the contract with the given total supply.
     #[init]
     pub fn new(
-        owner_id: AccountId,
         total_supply: U128,
-        metadata: FungibleTokenMetadata,
     ) -> Self {
         assert!(!env::state_exists(), "Already initialized");
-        metadata.assert_valid();
+        token_metadata.assert_valid();
+        let owner_id: AccountId = env::signer_account_id();
         let mut this = Self {
-            token: FungibleToken::new(b"a".to_vec()),
-            metadata: LazyOption::new(b"m".to_vec(), Some(&metadata)),
+            token: FungibleToken::new(StorageKey::FungibleToken),
+            metadata: LazyOption::new(StorageKey::Metadata, Some(&token_metadata)),
             owner: owner_id.clone(),
         };
         this.token.internal_register_account(&owner_id);
@@ -115,9 +111,9 @@ mod tests {
     fn test_new() {
         let mut context = get_context(accounts(1));
         testing_env!(context.build());
-        let contract = DistanciaToken::new_default_meta(accounts(1).into(), TOTAL_SUPPLY.into());
+        let contract = DistanciaToken::new(TOTAL_SUPPLY.into());
         testing_env!(context.is_view(true).build());
-        assert_eq!(contract.ft_total_supply().0, TOTAL_SUPPLY);
+        assert_eq!(contract.token.ft_total_supply().0, TOTAL_SUPPLY);
         assert_eq!(contract.ft_balance_of(accounts(1)).0, TOTAL_SUPPLY);
     }
 
@@ -133,7 +129,7 @@ mod tests {
     fn test_transfer() {
         let mut context = get_context(accounts(2));
         testing_env!(context.build());
-        let mut token = DistanciaToken::new_default_meta(accounts(2).into(), TOTAL_SUPPLY.into());
+        let mut token = DistanciaToken::new(TOTAL_SUPPLY.into());
         testing_env!(context
             .storage_usage(env::storage_usage())
             .attached_deposit(token.storage_balance_bounds().min.into())

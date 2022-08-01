@@ -15,6 +15,9 @@ import RouteManager from "./routes";
 import response from './lib/response';
 import { LoggerHelper } from './helpers/logger';
 import { container } from 'tsyringe';
+import jwtMiddleware from './middlewares/jwt.middleware';
+import passport from 'passport';
+
 const logger: LoggerHelper = container.resolve(LoggerHelper);
 
 export type IRequestWithIp = Request & RequestIpRequest;
@@ -63,6 +66,8 @@ export default class App {
     this.engine.use(requestIpMw());
     this.engine.use(response);
     this.engine.use(cors(corsOption));
+    this.engine.use(passport.initialize());
+    jwtMiddleware(passport);
     this.engine.use(compression(compressionOption));
     this.engine.use(express.json({ limit: requestSizeLimit }));
     this.engine.use(

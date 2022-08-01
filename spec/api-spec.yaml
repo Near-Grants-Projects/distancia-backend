@@ -51,6 +51,32 @@ paths:
           $ref: "#/components/responses/Unauthorized"
         "default":
           $ref: "#/components/responses/ServerError"
+          
+  /user/register:
+    post:
+      summary: "Endpoint to register user"
+      operationId: userRegister
+      x-visibility: public
+      tags:
+        - "register"
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/registerUser"
+
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RegisterUserResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "default":
+          $ref: "#/components/responses/ServerError"
 
   /interests:
     get:
@@ -123,6 +149,19 @@ components:
         address:
           type: string
           description: The address of the user
+
+    registerUser:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          description: The email of the user
+        password:
+          type: string
+          description: The password of the user
     
     MilestoneCovered:
       type: object
@@ -169,7 +208,20 @@ components:
         address:
           type: "string"
           description: "The address of user"
-      
+
+    RegisterUserResponse:
+      type: "object"
+      required:
+        - "id"
+        - "token"
+      properties:
+        id:
+          type: "string"
+          format: "uuid"
+          description: "The id of the user"
+        token:
+          type: "string"
+          description: "The user token"
 
     InterestDto:
       type: "object"

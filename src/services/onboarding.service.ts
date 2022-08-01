@@ -21,12 +21,12 @@ export class OnboardService {
         address: data.address,
       };
       if (data) {
-        return res.ok(obj, 'Onbording Created Succefully');
+        return res.ok(obj, 'Onboarding Created Succefully');
       }
     } catch (error) {
       return res.forbidden(
         error,
-        error.message || 'An error occured while creating Onbording'
+        error.message || 'An error occured while creating Onboarding'
       );
     }
   };

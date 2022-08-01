@@ -7,6 +7,6 @@ export default class OnboardController {
   constructor(private onboardService: OnboardService) {}
 
   saveUserAddress = async (req: IRequest, res: IResponse) => {
-    this.onboardService.saveUserAddress(req, res);
+    await this.onboardService.saveUserAddress(req, res);
   };
 }

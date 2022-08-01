@@ -4,6 +4,6 @@ import  OnboardController from "../controllers/onboard.controller"
 const onbaordController: any = container.resolve(OnboardController)
 
 const router = express.Router();
-router.post("/me", onbaordController.doSomething);
+router.post("/address", onbaordController.saveUserAddress);
 
 export default router;

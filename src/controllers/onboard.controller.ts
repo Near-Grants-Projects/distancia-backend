@@ -1,15 +1,12 @@
 import { injectable } from 'tsyringe'
-import { OnboardService } from '../services/service.controller';
+import { IRequest, IResponse } from '../interfaces/http.interface';
+import { OnboardService } from '../services/onboarding.service';
 
 @injectable()
 export default class OnboardController {
-    constructor(
-        private onboardService: OnboardService
-      ) {
-    
-      }
+  constructor(private onboardService: OnboardService) {}
 
-      doSomething = async (req, res) => {
-        console.log("here")
-      }
+  saveUserAddress = async (req: IRequest, res: IResponse) => {
+    await this.onboardService.saveUserAddress(req, res);
+  };
 }

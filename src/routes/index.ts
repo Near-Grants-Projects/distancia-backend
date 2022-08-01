@@ -19,7 +19,7 @@ export default class RouteManager {
   static installRoutes(app: Application) {
     app.use(root);
     app.use(apiRequestValidator(API_SPEC_PATH));
-    app.use("/onboard", onboard)
+    app.use("/onboarding", onboard);
     app.use((err: any, _req: any, _res: any,next: any) => {
       if(err.response){
         console.log(err.response.data)

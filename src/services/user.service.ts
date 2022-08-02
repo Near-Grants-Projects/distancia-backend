@@ -43,7 +43,8 @@ export class UserService {
       user.password = undefined;
       const data = {
         token: user.generateJWT(),
-        user,
+        _id: user.id,
+        email: user.email,
       };
       return res.ok(data, 'Registration Successful');
     } catch (error) {

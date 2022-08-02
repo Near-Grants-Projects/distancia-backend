@@ -68,11 +68,29 @@ paths:
 
       responses:
         '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RegisterUserResponse'
+          $ref: '#/components/responses/RegisterUserResponse'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        'default':
+          $ref: '#/components/responses/ServerError'
+
+  /user/login:
+    post:
+      summary: 'Endpoint to login user'
+      operationId: userLogin
+      x-visibility: public
+      tags:
+        - 'login'
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/loginUser'
+
+      responses:
+        '200':
+          $ref: '#/components/responses/LoginUserResponse'
         '401':
           $ref: '#/components/responses/Unauthorized'
         'default':
@@ -153,9 +171,16 @@ components:
 
     registerUser:
       type: object
-      required:
-        - email
-        - password
+      properties:
+        email:
+          type: string
+          description: The email of the user
+        password:
+          type: string
+          description: The password of the user
+    
+    loginUser:
+      type: object
       properties:
         email:
           type: string
@@ -201,6 +226,53 @@ components:
           type: 'array'
           items:
             $ref: '#/components/schemas/AdsDto'
+    UserList:
+      type: 'object'
+      required:
+        - 'email'
+        - 'password'
+      description: 'User Object'
+      properties:
+        status:
+          type: 'string'
+        message:
+          type: 'string'
+        data:
+          type: 'object'
+          properties:
+            id:
+              type: 'string'
+              format: 'uuid'
+              description: 'The unique user id'
+            email:
+              type: 'string'
+              description: 'The user email'
+
+    LoginList:
+      type: 'object'
+      required:
+        - 'email'
+        - 'password'
+      description: 'Login Response'
+      properties:
+        status:
+          type: 'string'
+        message:
+          type: 'string'
+        data:
+          type: 'object'
+          properties:
+            id:
+              type: 'string'
+              format: 'uuid'
+              description: 'The unique user id'
+            token:
+              type: 'string'
+              format: 'jwt'
+              description: 'The user token'
+            email:
+              type: 'string'
+              description: 'The user email'
 
     SaveAddressResponse:
       type: 'object'
@@ -215,20 +287,6 @@ components:
         address:
           type: 'string'
           description: 'The address of user'
-
-    RegisterUserResponse:
-      type: 'object'
-      required:
-        - 'id'
-        - 'token'
-      properties:
-        id:
-          type: 'string'
-          format: 'uuid'
-          description: 'The id of the user'
-        token:
-          type: 'string'
-          description: 'The user token'
 
     InterestDto:
       type: 'object'
@@ -268,6 +326,21 @@ components:
           description: 'The interests related to the ads'
           items:
             $ref: '#/components/schemas/InterestDto'
+
+    UserDto:
+      type: 'object'
+      properties:
+        id:
+          type: 'string'
+          format: 'uuid'
+          description: 'The unique user id'
+        token:
+          type: 'string'
+          format: 'uuid'
+          description: 'The user token'
+        email:
+          type: 'string'
+          description: 'The user email'
 
     SuccessMessage:
       type: object
@@ -326,7 +399,19 @@ components:
             status: 'BAD_REQUEST'
             data: null
             message: 'Request could not be validated.'
+    RegisterUserResponse:
+      description: Register Response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UserList'
 
+    LoginUserResponse:
+      description: Login Response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/LoginList'
     Unauthorized:
       description: Client is not authorized to make request
       content:
@@ -337,6 +422,16 @@ components:
             status: 'UNAUTHORIZED'
             data: null
             message: 'Either client security header is missing or it is not valid.'
+    Forbidden:
+      description: Client is making a bad request or an unprocessable entity
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessageDto'
+          example:
+            status: 'FORBIDDEN'
+            data: null
+            message: 'Either there is a bad request or it is not valid.'
 
     NotFound:
       description: Entity was not found

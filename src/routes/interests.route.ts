@@ -5,6 +5,6 @@ import InterestController from '../controllers/interest.controller';
 const interestController: any = container.resolve(InterestController);
 
 const router = express.Router();
-router.get('/interests', interestController.fetchInterests);
+router.get('/', interestController.fetchInterests);
 
 export default router;

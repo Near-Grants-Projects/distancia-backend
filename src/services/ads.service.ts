@@ -3,6 +3,7 @@
 import { injectable } from 'tsyringe';
 import { IRequest, IResponse } from '../interfaces/http.interface';
 import Ads from '../models/Ads.model';
+import User from '../models/user.model';
 
 @injectable()
 export class AdsService {
@@ -10,7 +11,7 @@ export class AdsService {
     try {
       let data, query;
       if (req.user) {
-        const user = await User.find({ user: req.user.id });
+        const user = await User.findById({ _id: req.user.id });
         const { interests } = user;
         for (let i = 0; i < interests.length; i++) {
           query = {

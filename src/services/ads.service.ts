@@ -13,13 +13,17 @@ export class AdsService {
       if (req.user) {
         const user = await User.findById({ _id: req.user.id });
         const { interests } = user;
-        for (let i = 0; i < interests.length; i++) {
-          query = {
-            $or: [{ name: interests[i].name }],
-          };
-        }
+        if (interests.length > 0) {
+          for (let i = 0; i < interests.length; i++) {
+            query = {
+              $or: [{ name: interests[i].name }],
+            };
+          }
 
-        data = await Ads.find(query);
+          data = await Ads.find(query);
+        } else {
+          data = await Ads.find({});
+        }
       } else {
         data = await Ads.find({});
       }

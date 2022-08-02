@@ -28,7 +28,7 @@ components:
         - code
         - message
       properties:
-        code:
+        status:
           type: string
           description: Error code
           example: UNKNOWN_ERROR

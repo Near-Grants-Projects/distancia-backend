@@ -227,10 +227,10 @@ components:
           example: Verification otp has been sent to your email
 
     ErrorMessageDto:
-      $ref: "./common.yaml#/components/schemas/ErrorMessageDto"
+      $ref: "https://api-spec-common.s3.amazonaws.com/common.yaml#/components/schemas/ErrorMessageDto"
 
     StatusDto:
-      $ref: "./common.yaml#/components/schemas/StatusDto"
+      $ref: "https://api-spec-common.s3.amazonaws.com/common.yaml#/components/schemas/StatusDto"
 
 
     # ENUM DEFINITIONS

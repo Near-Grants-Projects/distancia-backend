@@ -1,11 +1,11 @@
 openapi: 3.0.0
 info:
-  title: "Distancia Backend Service"
-  description: "This service provides endpoints for all related interactions"
+  title: 'Distancia Backend Service'
+  description: 'This service provides endpoints for all related interactions'
   version: 1.0.0
   contact:
-    name: "Distancia Team"
-    email: "dev@distancia.com"
+    name: 'Distancia Team'
+    email: 'dev@distancia.com'
 
 x-organization: distancia
 x-service-id: backend
@@ -16,14 +16,14 @@ servers:
 
 tags:
   - name: onboarding
-    description: "User onboarding related endpoints"
+    description: 'User onboarding related endpoints'
   - name: ads
-    description: "ads related endpoints"
+    description: 'ads related endpoints'
   - name: milestone
-    description: "milestone related endpoints"
+    description: 'milestone related endpoints'
 
 security:
-  - bearerToken: [ ]
+  - bearerToken: []
 
 paths:
   /onboarding/address:
@@ -32,68 +32,87 @@ paths:
       operationId: saveUserAddress
       x-visibility: public
       tags:
-        - "onboarding"
+        - 'onboarding'
 
       requestBody:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/UserAddress"
+              $ref: '#/components/schemas/UserAddress'
 
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SaveAddressResponse"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "default":
-          $ref: "#/components/responses/ServerError"
+                $ref: '#/components/schemas/SaveAddressResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        'default':
+          $ref: '#/components/responses/ServerError'
 
-  /ads/interests:
-    get:
-      summary: "get all interest category"
-      operationId: adsInterest
-      description: "Send list of interests"
+  /user/register:
+    post:
+      summary: 'Endpoint to register user'
+      operationId: userRegister
       x-visibility: public
       tags:
-        - "ads"
+        - 'register'
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/registerUser'
+
       responses:
         '200':
-          $ref: "#/components/responses/InterestListResponse"
-        "400":
-          $ref: "#/components/responses/InvalidRequest"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "default":
-          $ref: "#/components/responses/ServerError"
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegisterUserResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        'default':
+          $ref: '#/components/responses/ServerError'
 
-  /ads/vids:
+  /interests:
     get:
-      summary: "query ads base on interest"
-      operationId: adsVids
+      summary: 'fetch all interests'
+      operationId: interests
+      description: 'fetch all list of interests'
       x-visibility: public
       tags:
-        - "ads"
-      parameters:
-        - in: "query"
-          name: "interest"
-          schema:
-            type: "string"
-            minLength: 4
-          required: true
-          description: "interest name"
+        - 'interests'
       responses:
         '200':
-          $ref: "#/components/responses/AdsListResponse"
-        "400":
-          $ref: "#/components/responses/InvalidRequest"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "default":
-          $ref: "#/components/responses/ServerError"
+          $ref: '#/components/responses/InterestListResponse'
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        'default':
+          $ref: '#/components/responses/ServerError'
+
+  /ads:
+    get:
+      summary: 'fetch all ads'
+      operationId: ads
+      x-visibility: public
+      description: 'fetch all ads'
+      tags:
+        - 'ads'
+      responses:
+        '200':
+          $ref: '#/components/responses/AdsListResponse'
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        'default':
+          $ref: '#/components/responses/ServerError'
 
   /milestone/covered:
     post:
@@ -101,24 +120,24 @@ paths:
       operationId: milestoneCovered
       x-visibility: public
       tags:
-        - "milestone"
-      
+        - 'milestone'
+
       requestBody:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/MilestoneCovered"
+              $ref: '#/components/schemas/MilestoneCovered'
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SuccessMessage"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "default":
-          $ref: "#/components/responses/ServerError"
+                $ref: '#/components/schemas/SuccessMessage'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        'default':
+          $ref: '#/components/responses/ServerError'
 
 components:
   schemas:
@@ -131,7 +150,24 @@ components:
         address:
           type: string
           description: The address of the user
-    
+
+    registerUser:
+      type: object
+      required:
+        - email
+        - password
+        - username
+      properties:
+        email:
+          type: string
+          description: The email of the user
+        password:
+          type: string
+          description: The password of the user
+        username:
+          type: string
+          description: The username
+
     MilestoneCovered:
       type: object
       required:
@@ -144,75 +180,98 @@ components:
           type: string
           description: Type of activity
 
-
     # RESPONSE OBJECT DEFINITIONS
     InterestList:
-      type: "object"
-      description: "List of interests"
+      type: 'object'
+      description: 'List of interests'
       properties:
+        status:
+          type: 'string'
+        message:
+          type: 'string'
         data:
-          type: "array"
+          type: 'array'
           items:
-             $ref: '#/components/schemas/InterestDto'
-    AdsList: 
-      type: "object"
-      description: "List of Ads"
+            $ref: '#/components/schemas/InterestDto'
+    AdsList:
+      type: 'object'
+      description: 'List of Ads'
       properties:
+        status:
+          type: 'string'
+        message:
+          type: 'string'
         data:
-          type: "array"
+          type: 'array'
           items:
-             $ref: '#/components/schemas/AdsDto'
-
+            $ref: '#/components/schemas/AdsDto'
 
     SaveAddressResponse:
-      type: "object"
+      type: 'object'
       required:
-        - "id"
-        - "address"
+        - 'id'
+        - 'address'
       properties:
         id:
-          type: "string"
-          format: "uuid"
-          description: "The id of user"
+          type: 'string'
+          format: 'uuid'
+          description: 'The id of user'
         address:
-          type: "string"
-          description: "The address of user"
-      
+          type: 'string'
+          description: 'The address of user'
+
+    RegisterUserResponse:
+      type: 'object'
+      required:
+        - 'id'
+        - 'token'
+      properties:
+        id:
+          type: 'string'
+          format: 'uuid'
+          description: 'The id of the user'
+        token:
+          type: 'string'
+          description: 'The user token'
 
     InterestDto:
-      type: "object"
+      type: 'object'
       required:
-        - "id"
-        - "name"
+        - 'id'
+        - 'name'
       properties:
         id:
-          type: "string"
-          format: "uuid"
-          description: "The id of interest"
+          type: 'string'
+          format: 'uuid'
+          description: 'The id of interest'
         name:
-          type: "string"
-    
+          type: 'string'
+          description: 'The name of the interest'
+
     AdsDto:
-      type: "object"
+      type: 'object'
       required:
-        - "id"
+        - 'id'
       properties:
         id:
-          type: "string"
-          format : "uuid"
-          description: "The id of ads"
+          type: 'string'
+          format: 'uuid'
+          description: 'The id of ads'
         owner_id:
-          type: "string"
-          format: "uuid"
-          description: "The owner id of the ads"
-        interest_id:
-          type: "string"
-          format: "uuid"
-          description: "The id of interest"
+          type: 'string'
+          format: 'uuid'
+          description: 'The owner id of the ads'
         media_link:
-          type: "string"
+          type: 'string'
+          description: 'The url for the ads video or audio'
         media_type:
-          type: "string"
+          type: 'string'
+          description: 'The media type of the ad (video | audio)'
+        interests:
+          type: 'array'
+          description: 'The interests related to the ads'
+          items:
+            $ref: '#/components/schemas/InterestDto'
 
     SuccessMessage:
       type: object
@@ -227,11 +286,10 @@ components:
           example: Verification otp has been sent to your email
 
     ErrorMessageDto:
-      $ref: "https://api-spec-common.s3.amazonaws.com/common.yaml#/components/schemas/ErrorMessageDto"
+      $ref: 'https://api-spec-common.s3.amazonaws.com/common.yaml#/components/schemas/ErrorMessageDto'
 
     StatusDto:
-      $ref: "https://api-spec-common.s3.amazonaws.com/common.yaml#/components/schemas/StatusDto"
-
+      $ref: 'https://api-spec-common.s3.amazonaws.com/common.yaml#/components/schemas/StatusDto'
 
     # ENUM DEFINITIONS
   responses:
@@ -240,7 +298,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/StatusDto"
+            $ref: '#/components/schemas/StatusDto'
           example:
             success: true
             message: 'Action completed successfully'
@@ -267,7 +325,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorMessageDto"
+            $ref: '#/components/schemas/ErrorMessageDto'
           example:
             code: 'BAD_REQUEST'
             message: 'Request could not be validated.'
@@ -277,7 +335,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorMessageDto"
+            $ref: '#/components/schemas/ErrorMessageDto'
           example:
             code: 'UNAUTHORIZED'
             message: 'Either client security header is missing or it is not valid.'
@@ -287,7 +345,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorMessageDto"
+            $ref: '#/components/schemas/ErrorMessageDto'
           example:
             code: 'NOT_FOUND'
             message: 'Information could not be found'
@@ -297,7 +355,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorMessageDto"
+            $ref: '#/components/schemas/ErrorMessageDto'
           example:
             code: 'ACCESS_DENIED'
             message: 'Entity already exist!'
@@ -307,7 +365,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorMessageDto"
+            $ref: '#/components/schemas/ErrorMessageDto'
           example:
             code: 'ACCESS_DENIED'
             message: 'Expected permission or scope is not present.'
@@ -317,19 +375,19 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorMessageDto"
+            $ref: '#/components/schemas/ErrorMessageDto'
           example:
             code: 'INTERNAL_ERROR'
             message: 'An internal server error occurred.'
 
   securitySchemes:
     bearerToken:
-      type: "http"
-      scheme: "bearer"
-      bearerFormat: "JWT"
-      description: "Authentication for user-facing endpoints. Uses bearer token in API prefix."
+      type: 'http'
+      scheme: 'bearer'
+      bearerFormat: 'JWT'
+      description: 'Authentication for user-facing endpoints. Uses bearer token in API prefix.'
     authToken:
-      type: "apiKey"
-      name: "x-auth-token"
-      in: "header"
-      description: "Auth Token header for inter-service communication"
+      type: 'apiKey'
+      name: 'x-auth-token'
+      in: 'header'
+      description: 'Auth Token header for inter-service communication'

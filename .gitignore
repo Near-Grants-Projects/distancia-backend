@@ -1,3 +1,7 @@
 redoc-static.html
 node_modules
+.dist
+.DS_Store
 env
+client
+.idea/

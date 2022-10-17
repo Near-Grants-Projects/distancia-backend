@@ -5,7 +5,7 @@
      "experimentalDecorators": true,
      "esModuleInterop": true,   
      "module": "commonjs",
-     "outDir": "./dist/mrv",
+     "outDir": ".dist",
      "types": ["node"],
      "moduleResolution": "Node",
    }

@@ -156,6 +156,7 @@ components:
       required:
         - email
         - password
+        - username
       properties:
         email:
           type: string
@@ -163,6 +164,9 @@ components:
         password:
           type: string
           description: The password of the user
+        username:
+          type: string
+          description: The username
 
     MilestoneCovered:
       type: object
@@ -263,7 +267,7 @@ components:
         media_type:
           type: 'string'
           description: 'The media type of the ad (video | audio)'
-        interests: 
+        interests:
           type: 'array'
           description: 'The interests related to the ads'
           items:
@@ -282,10 +286,10 @@ components:
           example: Verification otp has been sent to your email
 
     ErrorMessageDto:
-      $ref: './common.yaml#/components/schemas/ErrorMessageDto'
+      $ref: 'https://api-spec-common.s3.amazonaws.com/common.yaml#/components/schemas/ErrorMessageDto'
 
     StatusDto:
-      $ref: './common.yaml#/components/schemas/StatusDto'
+      $ref: 'https://api-spec-common.s3.amazonaws.com/common.yaml#/components/schemas/StatusDto'
 
     # ENUM DEFINITIONS
   responses:
@@ -323,8 +327,7 @@ components:
           schema:
             $ref: '#/components/schemas/ErrorMessageDto'
           example:
-            status: 'BAD_REQUEST'
-            data: null
+            code: 'BAD_REQUEST'
             message: 'Request could not be validated.'
 
     Unauthorized:
@@ -334,8 +337,7 @@ components:
           schema:
             $ref: '#/components/schemas/ErrorMessageDto'
           example:
-            status: 'UNAUTHORIZED'
-            data: null
+            code: 'UNAUTHORIZED'
             message: 'Either client security header is missing or it is not valid.'
 
     NotFound:
@@ -345,8 +347,7 @@ components:
           schema:
             $ref: '#/components/schemas/ErrorMessageDto'
           example:
-            status: 'NOT_FOUND'
-            data: null
+            code: 'NOT_FOUND'
             message: 'Information could not be found'
 
     ConflictError:
@@ -356,8 +357,7 @@ components:
           schema:
             $ref: '#/components/schemas/ErrorMessageDto'
           example:
-            status: 'ACCESS_DENIED'
-            data: null
+            code: 'ACCESS_DENIED'
             message: 'Entity already exist!'
 
     AccessDenied:
@@ -367,8 +367,7 @@ components:
           schema:
             $ref: '#/components/schemas/ErrorMessageDto'
           example:
-            status: 'ACCESS_DENIED'
-            data: null
+            code: 'ACCESS_DENIED'
             message: 'Expected permission or scope is not present.'
 
     ServerError:
@@ -377,9 +376,8 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorMessageDto'
-          example:            
-            status: 'INTERNAL_ERROR'
-            data: null
+          example:
+            code: 'INTERNAL_ERROR'
             message: 'An internal server error occurred.'
 
   securitySchemes:
@@ -390,6 +388,6 @@ components:
       description: 'Authentication for user-facing endpoints. Uses bearer token in API prefix.'
     authToken:
       type: 'apiKey'
-      name: 'distancia-auth-token'
+      name: 'x-auth-token'
       in: 'header'
       description: 'Auth Token header for inter-service communication'

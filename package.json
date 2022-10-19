@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build-client": "openapi-generator-cli generate -i ./spec/api-spec.yaml -g dart -o ./client",
     "dev": "nodemon src/index.ts",
-    "start": "tsc && node .dist/index.js"
+    "build": "npm run clean && tsc",
+    "start": "node .dist/"
   },
   "repository": {
     "type": "git",

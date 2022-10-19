@@ -1,20 +1,19 @@
 {
-    "compilerOptions": {
-     "target": "es2015",
-     "emitDecoratorMetadata": true,
-     "experimentalDecorators": true,
-     "esModuleInterop": true,   
-     "module": "commonjs",
-     "outDir": ".dist",
-     "types": ["node"],
-     "moduleResolution": "Node",
-   },
-   "include": [
-    "src/**/*.ts",
-    "**/*.ejs"
-  ],
-  "exclude": [
-    "node_modules",
-    "**/*.spec.ts"
-  ]
- }
+  "compilerOptions": {
+    "target": "es2016",
+    "module": "commonjs",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "rootDir": "./src",
+    "outDir": "dist",
+    "esModuleInterop": true,
+    "types": ["node"],
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true
+  },
+  "include": ["src/**/*.ts", "**/*.ejs"],
+  "exclude": ["node_modules", "**/*.spec.ts"]
+}

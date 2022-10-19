@@ -2,7 +2,7 @@
 
 import { injectable } from 'tsyringe';
 import { IRequest, IResponse } from '../interfaces/http.interface';
-import Interest from '../models/Interest.model';
+import Interest from '../models/interest.model';
 
 @injectable()
 export class InterestService {

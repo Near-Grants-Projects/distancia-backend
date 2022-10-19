@@ -2,7 +2,7 @@
 
 import { injectable } from 'tsyringe';
 import { IRequest, IResponse } from '../interfaces/http.interface';
-import Ads from '../models/Ads.model';
+import Ads from '../models/ads.model';
 import User from '../models/user.model';
 
 @injectable()

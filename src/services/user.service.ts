@@ -1,5 +1,5 @@
 import { injectable } from 'tsyringe';
-import User from '../models/user.model';
+import User from '../models/user-model.model';
 import { IRequest, IResponse } from '../interfaces/http.interface';
 
 @injectable()

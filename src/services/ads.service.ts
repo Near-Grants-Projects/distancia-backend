@@ -3,7 +3,7 @@
 import { injectable } from 'tsyringe';
 import { IRequest, IResponse } from '../interfaces/http.interface';
 import Ads from '../models/ads.model';
-import User from '../models/user.model';
+import User from '../models/user-model.model';
 
 @injectable()
 export class AdsService {

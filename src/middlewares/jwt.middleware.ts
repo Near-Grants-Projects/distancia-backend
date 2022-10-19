@@ -1,6 +1,6 @@
 import passportJwt from 'passport-jwt';
 import config from '../config';
-import User from '../models/user.model';
+import User from 'src/models/user.model';
 
 /**
  * passport-jwt - A Passport strategy for authenticating with a JSON Web Token.

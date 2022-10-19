@@ -9,7 +9,7 @@
     "clean": "rm -fr dist",
     "dev": "nodemon src/index.ts",
     "build": "npm run clean && tsc",
-    "start": "node .dist/"
+    "start": "node dist/"
   },
   "repository": {
     "type": "git",
@@ -61,6 +61,6 @@
   },
   "engines": {
     "npm": "6.14.15",
-    "node": "14.18.3"
+    "node": "16.13.1"
   }
 }

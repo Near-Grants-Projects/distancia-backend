@@ -1,5 +1,3 @@
-/** @format */
-
 import mongoose, { Schema, model } from 'mongoose';
 import { IAds } from '../interfaces/Model/IAds';
 

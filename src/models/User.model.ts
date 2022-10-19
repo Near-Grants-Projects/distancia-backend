@@ -105,6 +105,6 @@ UserSchema.methods.generateVerificationToken = function (): void {
 };
 
 // Create and export user model
-const User = model<IUserModel>('Users', UserSchema);
+export default model<IUserModel>('Users', UserSchema);
 
-export default User;
+// export default User;

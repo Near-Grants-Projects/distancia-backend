@@ -1,6 +1,6 @@
 import passportJwt from 'passport-jwt';
 import config from '../config';
-import User from 'src/models/user.model';
+//import User from 'src/models/user.model';
 
 /**
  * passport-jwt - A Passport strategy for authenticating with a JSON Web Token.
@@ -19,14 +19,14 @@ const opts = {
 export default (passport: any) => {
   passport.use(
     new JwtStrategy(opts, async (jwt_payload, done) => {
-      await User.findById(jwt_payload.id)
-        .then((user) => {
-          if (user) return done(null, user);
-          return done(null, false);
-        })
-        .catch((err) => {
-          return done(err, false, { message: 'Internal Server Error' });
-        });
+      // await User.findById(jwt_payload.id)
+      //   .then((user) => {
+      //     if (user) return done(null, user);
+      //     return done(null, false);
+      //   })
+      //   .catch((err) => {
+      //     return done(err, false, { message: 'Internal Server Error' });
+      //   });
     })
   );
 };

@@ -1,6 +1,6 @@
 import passportJwt from 'passport-jwt';
 import config from '../config';
-import user from '../models/user.model';
+// import user from '../models/user.model';
 import password from '../models/password-reset.model'
 
 /**
@@ -20,7 +20,7 @@ const opts = {
 export default (passport: any) => {
   passport.use(
     new JwtStrategy(opts, async (jwt_payload, done) => {
-      await user.findById(jwt_payload.id)
+      await password.findById(jwt_payload.id)
         .then((user) => {
           if (user) return done(null, user);
           return done(null, false);

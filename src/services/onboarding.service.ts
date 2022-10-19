@@ -2,7 +2,7 @@
 
 import { injectable } from 'tsyringe';
 import { IRequest, IResponse } from '../interfaces/http.interface';
-import Onboarding from '../models/onboarding.model';
+import Onboarding from '../models/onboarding';
 
 @injectable()
 export class OnboardService {

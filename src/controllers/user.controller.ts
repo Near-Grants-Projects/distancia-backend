@@ -1,17 +1,29 @@
 import { injectable } from 'tsyringe';
 import { IRequest, IResponse } from '../interfaces/http.interface';
 import { UserService } from '../services/user.service';
+import Constants, { StatusCodes } from '../constants';
+import {
+  HandleErrorResponse,
+  ServerError,
+  UnauthorizedAccess,
+} from '../exceptions/ErrorHandlers';
+import { ErrorCode } from '../exceptions/ErrorCodes';
 
 @injectable()
 class UserController {
-  constructor(private authService: UserService) {}
+  constructor(private userService: UserService) {}
   /**
    * @route POST api/v1/auth/login.
    * @desc Login user and return JWT token and user data.
    * @access Public.
    */
   loginUser = async (req: IRequest, res: IResponse) => {
-    await this.authService.loginUser(req, res);
+    try {
+      let response = await this.userService.loginUser(req, res);
+      return res.status(StatusCodes.OK).json(response);
+    } catch (err) {
+      return HandleErrorResponse(err, res);
+    }
   };
 
   /**
@@ -20,7 +32,12 @@ class UserController {
    * @access Public.
    */
   registerUser = async (req: IRequest, res: IResponse) => {
-    await this.authService.registerUser(req, res);
+    try {
+      let response = await this.userService.registerUser(req, res);
+      return res.status(StatusCodes.OK).json(response);
+    } catch (err) {
+      return HandleErrorResponse(err, res);
+    }
   };
 
   //   /**

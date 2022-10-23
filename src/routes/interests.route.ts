@@ -6,5 +6,6 @@ const interestController: any = container.resolve(InterestController);
 
 const router = express.Router();
 router.get('/', interestController.fetchInterests);
+router.post('/', interestController.addInterests);
 
 export default router;

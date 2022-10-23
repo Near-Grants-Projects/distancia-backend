@@ -25,12 +25,11 @@ const UserSchema = new Schema<IUserModel>(
     },
     password: String,
     address: String,
-    interests: [],
     fuel_tokens: Number,
     near_balance: Number,
-    milestones: [],
     verifiedAt: Date,
     walkings: Number,
+    username: String,
   },
   {
     timestamps: true,

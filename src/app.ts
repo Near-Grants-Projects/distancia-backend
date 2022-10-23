@@ -1,23 +1,23 @@
-import express, { Application, Request } from "express";
-import cors from "cors";
-import helmet from "helmet";
+import express, { Application, Request } from 'express';
+import cors from 'cors';
+import helmet from 'helmet';
 import compression from 'compression';
-import cookieParser from "cookie-parser";
-import C from "./constants";
-import { IAppOptions, IDatabaseConnector } from "./interfaces";
-import { mw as requestIpMw, Request as RequestIpRequest } from "request-ip";
-import { MongoDbConnector } from "./helpers";
-import config from "./config"
-import mongoose, { Schema } from "mongoose";
-import { MongooseUuid } from "./database/types/mongoose-uuid.type";
+import cookieParser from 'cookie-parser';
+import C from './constants';
+import { IAppOptions, IDatabaseConnector } from './interfaces';
+import { mw as requestIpMw, Request as RequestIpRequest } from 'request-ip';
+import { MongoDbConnector } from './helpers';
+import config from './config';
+import mongoose, { Schema } from 'mongoose';
+import { MongooseUuid } from './database/types/mongoose-uuid.type';
 (Schema.Types as any).UUID = MongooseUuid;
-import RouteManager from "./routes";
+import RouteManager from './routes';
 import response from './lib/response';
 import { LoggerHelper } from './helpers/logger';
 import { container } from 'tsyringe';
 import jwtMiddleware from './middlewares/jwt.middleware';
 import passport from 'passport';
-import { errorHandlerMiddleware } from "./middlewares/error-handler.middleware";
+import { errorHandlerMiddleware } from './middlewares/error-handler.middleware';
 
 const logger: LoggerHelper = container.resolve(LoggerHelper);
 
@@ -77,9 +77,8 @@ export default class App {
         extended: urlencodExtended,
       })
     );
-    
-   
 
+    //wo
     // if (!["staging", "production"].includes(<string>process.env.NODE_ENV)) {
     //   this.engine.use(morgan("combined", { stream: LoggerStream }));
     // }
@@ -90,12 +89,8 @@ export default class App {
     //   errorHandlerMiddleware(err,_req,_res,next);
     // })
     //this.engine.use(errorHandlerMiddleware);
-     this.engine.use(
-      errorHandlerMiddleware
-    )
+    this.engine.use(errorHandlerMiddleware);
   }
-
-  
 
   async initialize() {
     await this.setupDependencies();

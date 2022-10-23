@@ -1,29 +1,40 @@
 import { injectable } from 'tsyringe';
 import User from '../models/user-model.model';
 import { IRequest, IResponse } from '../interfaces/http.interface';
+import {
+  BadRequest,
+  ServerError,
+  UnauthorizedAccess,
+} from '../exceptions/ErrorHandlers';
+import { Exceptions } from 'error-handler';
 
 @injectable()
 export class UserService {
   public registerUser = async (req: IRequest, res: IResponse) => {
-    try {
-      const { email, password } = req.body;
+    const { email, password, username } = req.body;
+    const findUser = await User.findOne({ email });
+    console.log('result', findUser);
+    if (findUser) {
+      throw new Exceptions.BadRequestError('user already exists');
+    }
+    console.log('username', username);
+    let user = new User({
+      email,
+      password,
+      username,
+    });
 
-      let user = new User({
-        email,
-        password,
-      });
+    // Save user to database
+    user = await user.save();
 
-      // Save user to database
-      user = await user.save();
-
-      if (user) {
-        return res.ok(user, 'Registration Successful');
-      }
-    } catch (error) {
-      return res.forbidden(
-        error,
-        error.message || 'An error occured while creating account'
-      );
+    if (user) {
+      console.log(user);
+      delete user.password;
+      return {
+        email: user.email,
+        id: user._id,
+        username: user.username,
+      };
     }
   };
 
@@ -34,18 +45,19 @@ export class UserService {
       const user = await User.findOne({ email });
 
       // Validate email addresss
-      if (!user) return res.notFound();
+      if (!user) throw new Exceptions.NotFoundError('user does not exists');
 
       // Validate password
       if (!(await user.comparePassword(password))) return res.badRequest();
 
       await user.save();
       user.password = undefined;
-      const data = {
+      return {
+        email: user.email,
+        username: user.username,
+        id: user._id,
         token: user.generateJWT(),
-        user,
       };
-      return res.ok(data, 'Registration Successful');
     } catch (error) {
       return res.forbidden(
         error,

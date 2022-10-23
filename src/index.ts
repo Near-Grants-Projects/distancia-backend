@@ -12,6 +12,7 @@ const main = async () => {
   await app.initialize();
   app.checkDependencies();
 
+
   app.run();
 };
 

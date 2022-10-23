@@ -11,4 +11,5 @@ export interface IUser extends Document {
   milestones: Array<any>;
   walkings: number;
   verifiedAt: Date;
+  username: string;
 }

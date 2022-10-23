@@ -17,6 +17,7 @@ import { LoggerHelper } from './helpers/logger';
 import { container } from 'tsyringe';
 import jwtMiddleware from './middlewares/jwt.middleware';
 import passport from 'passport';
+import { errorHandlerMiddleware } from "./middlewares/error-handler.middleware";
 
 const logger: LoggerHelper = container.resolve(LoggerHelper);
 
@@ -76,6 +77,8 @@ export default class App {
         extended: urlencodExtended,
       })
     );
+    
+   
 
     // if (!["staging", "production"].includes(<string>process.env.NODE_ENV)) {
     //   this.engine.use(morgan("combined", { stream: LoggerStream }));
@@ -87,7 +90,12 @@ export default class App {
     //   errorHandlerMiddleware(err,_req,_res,next);
     // })
     //this.engine.use(errorHandlerMiddleware);
+     this.engine.use(
+      errorHandlerMiddleware
+    )
   }
+
+  
 
   async initialize() {
     await this.setupDependencies();

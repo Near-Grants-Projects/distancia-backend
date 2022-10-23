@@ -1,5 +1,6 @@
 /** @format */
 
+import { Exceptions } from 'error-handler';
 import { injectable } from 'tsyringe';
 import { IRequest, IResponse } from '../interfaces/http.interface';
 import Ads from '../models/ads-model';
@@ -7,59 +8,40 @@ import User from '../models/user-model.model';
 
 @injectable()
 export class AdsService {
-  public fetchAds = async (req: IRequest, res: IResponse) => {
-    try {
-      let data, query;
-      if (req.user) {
-        const user = await User.findById({ _id: req.user.id });
-        const { interests } = user;
-        if (interests.length > 0) {
-          for (let i = 0; i < interests.length; i++) {
-            query = {
-              $or: [{ name: interests[i].name }],
-            };
-          }
+  public fetchAds = async (interestId: String) => {
+    const interest: any = await Ads.find({ interestId });
 
-          data = await Ads.find(query);
-        } else {
-          data = await Ads.find({});
-        }
-      } else {
-        data = await Ads.find({});
-      }
-
-      if (data) {
-        return res.ok(data, 'Ads fetched Successfully');
-      }
-    } catch (error) {
-      return res.forbidden(
-        error,
-        error.message || 'An error occured while fetching ads'
-      );
+    if (!interest) {
+      throw new Exceptions.NotFoundError('Ads not found');
     }
+
+    return interest;
   };
 
-  public createAd = async (req: IRequest, res: IResponse) => {
-    try {
-      const { owner_id, media_link, media_type, interests } = req.body;
+  public createAd = async (data: any) => {
+    const {
+      ownerId,
+      mediaLink,
+      mediaType,
+      interestId,
+      description,
+      duration,
+    } = data;
+    //TODO validate owner_id against the owner table or user table but we need to add a column for userType
 
-      const adsEntity = new Ads({
-        owner_id,
-        media_link,
-        media_type,
-        interests,
-      });
+    const adsEntity = new Ads({
+      ownerId,
+      mediaLink,
+      mediaType,
+      interestId,
+      description,
+      duration,
+    });
 
-      const data = await adsEntity.save();
+    const ads = await adsEntity.save();
 
-      if (data) {
-        return res.ok(data, 'Ads Created Successfully');
-      }
-    } catch (error) {
-      return res.forbidden(
-        error,
-        error.message || 'An error occured while creating Ads'
-      );
+    if (ads) {
+      return ads;
     }
   };
 }

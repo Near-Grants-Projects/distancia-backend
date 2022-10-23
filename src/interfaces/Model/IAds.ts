@@ -1,11 +1,15 @@
 /** @format */
 
-import { Document, Types } from "mongoose";
+import { Document, Types } from 'mongoose';
+import { AdsStatus, MediaType } from '../../constants/status.const';
 
 export interface IAds extends Document {
   _id: Types.ObjectId;
-  owner_id: string;
-  media_link: string;
-  media_type: string;
-  interests: [];
+  ownerId: string;
+  mediaLink: string;
+  mediaType: MediaType;
+  interestId: string;
+  description: string;
+  status: AdsStatus;
+  duration: number;
 }

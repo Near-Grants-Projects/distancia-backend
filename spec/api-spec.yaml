@@ -11,8 +11,8 @@ x-organization: distancia
 x-service-id: backend
 
 servers:
-  - description: Staging Ingress
-    url: https://api.distancia
+  - description: Staging
+    url: https://distancia-dlt.herokuapp.com/
 
 tags:
   - name: onboarding
@@ -58,13 +58,39 @@ paths:
       operationId: userRegister
       x-visibility: public
       tags:
-        - 'register'
+        - 'user'
 
       requestBody:
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/registerUser'
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegisterUserResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        'default':
+          $ref: '#/components/responses/ServerError'
+
+  /user/login:
+    post:
+      summary: 'Endpoint to login user'
+      operationId: loginUser
+      x-visibility: public
+      tags:
+        - 'user'
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/loginUser'
 
       responses:
         '200':
@@ -161,12 +187,25 @@ components:
         email:
           type: string
           description: The email of the user
-        password:
+        id:
           type: string
-          description: The password of the user
+          description: The id of the user
         username:
           type: string
           description: The username
+
+    loginUser:
+      type: object
+      required:
+        - email
+        - username
+      properties:
+        email:
+          type: string
+          description: The email of the user
+        password:
+          type: string
+          description: The password of the user
 
     MilestoneCovered:
       type: object
@@ -182,17 +221,11 @@ components:
 
     # RESPONSE OBJECT DEFINITIONS
     InterestList:
-      type: 'object'
+      type: 'array'
       description: 'List of interests'
-      properties:
-        status:
-          type: 'string'
-        message:
-          type: 'string'
-        data:
-          type: 'array'
-          items:
-            $ref: '#/components/schemas/InterestDto'
+      items:
+        $ref: '#/components/schemas/InterestDto'
+
     AdsList:
       type: 'object'
       description: 'List of Ads'
@@ -234,19 +267,54 @@ components:
           type: 'string'
           description: 'The user token'
 
+    LoginUserResponse:
+      type: 'object'
+      required:
+        - 'email'
+        - 'username'
+        - 'id'
+        - 'token'
+      properties:
+        id:
+          type: 'string'
+          format: 'uuid'
+          description: 'The id of the user'
+        email:
+          type: 'string'
+          description: 'The user email'
+        username:
+          type: 'string'
+          description: 'The username'
+        token:
+          type: string
+          description: 'The token'
+
     InterestDto:
       type: 'object'
       required:
         - 'id'
         - 'name'
+        - 'url'
+        - 'status'
+        - 'createdAt'
+        - 'updatedAt'
       properties:
         id:
           type: 'string'
-          format: 'uuid'
           description: 'The id of interest'
         name:
           type: 'string'
           description: 'The name of the interest'
+        url:
+          type: 'string'
+          description: 'The url of the interest'
+        status:
+          type: 'string'
+          description: 'Status'
+        createdAt:
+          $ref: '#/components/schemas/Timestamp'
+        updatedAt:
+          $ref: '#/components/schemas/Timestamp'
 
     AdsDto:
       type: 'object'
@@ -290,6 +358,8 @@ components:
 
     StatusDto:
       $ref: 'https://api-spec-common.s3.amazonaws.com/common.yaml#/components/schemas/StatusDto'
+    Timestamp:
+      $ref: 'https://resources.nestechops.com/openapi/common.yaml#/components/schemas/Timestamp'
 
     # ENUM DEFINITIONS
   responses:

@@ -1,10 +1,10 @@
 /** @format */
 
-import { Exceptions } from 'error-handler';
 import { InterestStatus } from '../constants/status.const';
 import { injectable } from 'tsyringe';
 import { IRequest, IResponse } from '../interfaces/http.interface';
 import Interest from '../models/interest';
+import { BadRequest, ResourceNotFoundError } from '../exceptions/ErrorHandlers';
 
 @injectable()
 export class InterestService {
@@ -12,7 +12,7 @@ export class InterestService {
     const data = await Interest.find({});
 
     if (!data) {
-      throw new Exceptions.NotFoundError('Interest does not exists');
+      throw new ResourceNotFoundError('Interest already exists');
     }
     return data;
   };
@@ -20,7 +20,7 @@ export class InterestService {
   public addInterest = async (data: any) => {
     const findInterest = await Interest.findOne({ name: data.name });
     if (findInterest) {
-      throw new Exceptions.BadRequestError('Interest already exists');
+      throw new BadRequest('Interest already exists');
     }
     let interest = new Interest({
       name: data.name,

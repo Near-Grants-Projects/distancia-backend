@@ -1,15 +1,11 @@
-import Constants  from "../constants";
-import { ErrorReporter } from "../services/error-reporter.service";
-import { error } from "express-openapi-validator";
-import { ErrorHandler } from "error-handler";
-import { Request, Response, NextFunction } from "express";
+import Constants from '../constants';
+import { error } from 'express-openapi-validator';
+import { ErrorHandler } from 'error-handler';
+import { Request, Response, NextFunction } from 'express';
 
 export const errorHandlerMiddleware = (includeStackTrace: boolean) => {
   const allOpenApiErrors = Object.values(error);
-  const nonValidationMiddleware = ErrorHandler.createMiddleware(
-    includeStackTrace,
-    ErrorReporter
-  );
+  const nonValidationMiddleware = ErrorHandler.createMiddleware(includeStackTrace);
 
   return (err: any, req: Request, res: Response, next: NextFunction) => {
     if (allOpenApiErrors.includes(err.constructor)) {
@@ -29,7 +25,7 @@ export const errorHandlerMiddleware = (includeStackTrace: boolean) => {
         },
       });
     } else {
-      if (process.env.NODE_ENV === "DEV") {
+      if (process.env.NODE_ENV === 'DEV') {
         console.error(err?.stack);
       }
 

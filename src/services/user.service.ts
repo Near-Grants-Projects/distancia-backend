@@ -3,10 +3,10 @@ import User from '../models/user-model.model';
 import { IRequest, IResponse } from '../interfaces/http.interface';
 import {
   BadRequest,
+  ResourceNotFoundError,
   ServerError,
   UnauthorizedAccess,
 } from '../exceptions/ErrorHandlers';
-import { Exceptions } from 'error-handler';
 
 @injectable()
 export class UserService {
@@ -15,7 +15,7 @@ export class UserService {
     const findUser = await User.findOne({ email });
     console.log('result', findUser);
     if (findUser) {
-      throw new Exceptions.BadRequestError('user already exists');
+      throw new BadRequest('user already exists');
     }
     console.log('username', username);
     let user = new User({
@@ -45,7 +45,7 @@ export class UserService {
       const user = await User.findOne({ email });
 
       // Validate email addresss
-      if (!user) throw new Exceptions.NotFoundError('user does not exists');
+      if (!user) throw new ResourceNotFoundError('user does not exists');
 
       // Validate password
       if (!(await user.comparePassword(password))) return res.badRequest();

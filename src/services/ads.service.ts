@@ -1,6 +1,5 @@
 /** @format */
-
-import { Exceptions } from 'error-handler';
+import { ResourceNotFoundError } from '../exceptions/ErrorHandlers';
 import { injectable } from 'tsyringe';
 import { IRequest, IResponse } from '../interfaces/http.interface';
 import Ads from '../models/ads-model';
@@ -12,7 +11,7 @@ export class AdsService {
     const interest: any = await Ads.find({ interestId });
 
     if (!interest) {
-      throw new Exceptions.NotFoundError('Ads not found');
+      throw new ResourceNotFoundError('Ads not found');
     }
 
     return interest;

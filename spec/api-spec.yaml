@@ -98,7 +98,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RegisterUserResponse'
+                $ref: '#/components/schemas/LoginUserResponse'
         '401':
           $ref: '#/components/responses/Unauthorized'
         'default':
@@ -187,9 +187,9 @@ components:
         email:
           type: string
           description: The email of the user
-        id:
+        password:
           type: string
-          description: The id of the user
+          description: The password of the user
         username:
           type: string
           description: The username
@@ -198,7 +198,7 @@ components:
       type: object
       required:
         - email
-        - username
+        - password
       properties:
         email:
           type: string
@@ -256,16 +256,20 @@ components:
     RegisterUserResponse:
       type: 'object'
       required:
+        - 'email'
         - 'id'
-        - 'token'
+        - 'username'
       properties:
         id:
           type: 'string'
           format: 'uuid'
           description: 'The id of the user'
-        token:
+        email:
           type: 'string'
           description: 'The user token'
+        username:
+          type: 'string'
+          description: 'The username'
 
     LoginUserResponse:
       type: 'object'

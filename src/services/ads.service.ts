@@ -8,7 +8,7 @@ import User from '../models/user-model.model';
 @injectable()
 export class AdsService {
   public fetchAds = async (interestId: String) => {
-    const interest: any = await Ads.find({ interestId });
+    const interest: any = await Ads.find({});
 
     if (!interest) {
       throw new ResourceNotFoundError('Ads not found');

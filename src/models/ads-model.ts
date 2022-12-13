@@ -38,6 +38,13 @@ const AdsSchema = new Schema<IAds>(
   },
   {
     timestamps: true,
+    toJSON: {
+      versionKey: false,
+      transform: function (doc: any, ret: any) {
+        delete ret._id;
+        ret.id = doc._id;
+      },
+    },
   }
 );
 

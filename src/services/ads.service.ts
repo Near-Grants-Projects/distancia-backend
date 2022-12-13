@@ -13,7 +13,6 @@ export class AdsService {
     if (!interest) {
       throw new ResourceNotFoundError('Ads not found');
     }
-
     return interest;
   };
 

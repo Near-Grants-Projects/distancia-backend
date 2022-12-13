@@ -230,14 +230,26 @@ components:
       type: 'object'
       description: 'List of Ads'
       properties:
+        id:
+          type: 'string'
+        ownerId:
+          type: 'string'
+        mediaLink:
+          type: 'string'
+        mediaType:
+          type: 'string'
+        interestId:
+          type: 'string'
+        description:
+          type: 'string'
         status:
           type: 'string'
-        message:
-          type: 'string'
-        data:
-          type: 'array'
-          items:
-            $ref: '#/components/schemas/AdsDto'
+        duration:
+          type: 'integer'
+        createdAt:
+          $ref: '#/components/schemas/Timestamp'
+        updatedAt:
+          $ref: '#/components/schemas/Timestamp'
 
     SaveAddressResponse:
       type: 'object'

@@ -65,4 +65,6 @@ export class UserService {
       );
     }
   };
+
+  public updateAccount = async (userId, accountId) => {};
 }
